@@ -14,6 +14,14 @@ header p { color: #666; font-size: 0.95rem; max-width: 620px; margin: 0 auto; }
 
 .section-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin: 28px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
 
+.section-header { display: flex; justify-content: space-between; align-items: center; margin: 28px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+.section-header .section-title { margin: 0; padding-bottom: 0; border: none; }
+.sort-control { display: flex; align-items: center; gap: 8px; }
+.sort-control label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.sort-control select { font-size: 0.85rem; padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #1a1a2e; cursor: pointer; outline: none; }
+.sort-control select:hover { border-color: #0a3d91; }
+.sort-control select:focus { border-color: #0a3d91; box-shadow: 0 0 0 2px rgba(10,61,145,0.15); }
+
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
 
 .card-tile { background: white; border-radius: 12px; padding: 20px 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-decoration: none; color: inherit; transition: transform 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; gap: 14px; border: 1px solid transparent; }
@@ -49,7 +57,16 @@ footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #94a3b
     <p>Estimate the personal value of credit card benefits with adjustable sliders. Pick a card below to start.</p>
   </header>
 
-  <h2 class="section-title">Available Cards</h2>
+  <div class="section-header">
+    <h2 class="section-title">Available Cards</h2>
+    <div class="sort-control">
+      <label for="sort-select">Sort by</label>
+      <select id="sort-select" onchange="renderCards()">
+        <option value="netYear1">Net Value (Year 1)</option>
+        <option value="netOngoing">Net Value (Ongoing)</option>
+      </select>
+    </div>
+  </div>
   <div class="card-grid" id="card-grid"></div>
 
   <footer>Net values are computed from the default slider settings on each card's analysis page.</footer>
@@ -88,48 +105,60 @@ function classFor(n) {
 }
 
 const grid = document.getElementById('card-grid');
-(window.CARDS || []).forEach(card => {
-  const { netOngoing, netYear1 } = computeNetValues(card);
-  const tagClass = (card.type || '').toLowerCase();
 
-  const tile = document.createElement('a');
-  tile.href = card.detailUrl;
-  tile.className = 'card-tile';
-  tile.innerHTML = `
-    <div class="card-header">
-      <div>
-        <div class="card-name">${card.name}</div>
-        <div class="card-issuer">${card.issuer}${card.network ? ' · ' + card.network : ''}</div>
+function renderCards() {
+  const sortBy = document.getElementById('sort-select').value;
+  const cards = (window.CARDS || []).map(card => {
+    const { netOngoing, netYear1 } = computeNetValues(card);
+    return { card, netOngoing, netYear1 };
+  });
+  cards.sort((a, b) => b[sortBy] - a[sortBy]);
+
+  grid.innerHTML = '';
+  cards.forEach(({ card, netOngoing, netYear1 }) => {
+    const tagClass = (card.type || '').toLowerCase();
+
+    const tile = document.createElement('a');
+    tile.href = card.detailUrl;
+    tile.className = 'card-tile';
+    tile.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${card.name}</div>
+          <div class="card-issuer">${card.issuer}${card.network ? ' · ' + card.network : ''}</div>
+        </div>
+        ${card.type ? `<span class="card-tag ${tagClass}">${card.type}</span>` : ''}
       </div>
-      ${card.type ? `<span class="card-tag ${tagClass}">${card.type}</span>` : ''}
-    </div>
-    <div class="card-stats">
-      <div class="stat-item">
-        <div class="stat-label">Annual Fee</div>
-        <div class="stat-value">$${card.annualFee}</div>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Annual Fee</div>
+          <div class="stat-value">$${card.annualFee}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Sign-On Bonus</div>
+          <div class="stat-value highlight">${card.signOnBonusLabel || '—'}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Net Value (Ongoing)</div>
+          <div class="stat-value ${classFor(netOngoing)}">${fmtSigned(netOngoing)}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Net Value (Year 1)</div>
+          <div class="stat-value ${classFor(netYear1)}">${fmtSigned(netYear1)}</div>
+        </div>
       </div>
-      <div class="stat-item">
-        <div class="stat-label">Sign-On Bonus</div>
-        <div class="stat-value highlight">${card.signOnBonusLabel || '—'}</div>
+      <div class="card-footer">
+        <div class="card-categories">
+          ${(card.categories || []).map(c => `<span class="category-pill">${c}</span>`).join('')}
+        </div>
+        <span class="card-cta">Analyze</span>
       </div>
-      <div class="stat-item">
-        <div class="stat-label">Net Value (Ongoing)</div>
-        <div class="stat-value ${classFor(netOngoing)}">${fmtSigned(netOngoing)}</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">Net Value (Year 1)</div>
-        <div class="stat-value ${classFor(netYear1)}">${fmtSigned(netYear1)}</div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <div class="card-categories">
-        ${(card.categories || []).map(c => `<span class="category-pill">${c}</span>`).join('')}
-      </div>
-      <span class="card-cta">Analyze</span>
-    </div>
-  `;
-  grid.appendChild(tile);
-});
+    `;
+    grid.appendChild(tile);
+  });
+}
+
+renderCards();
 </script>
 </body>
 </html>
