@@ -166,8 +166,8 @@
 
     document.getElementById('total-benefits').textContent = `$${ongoing}`;
     document.getElementById('total-benefits-y1').textContent = `First year: $${firstYearTotal}`;
-    document.getElementById('annual-fee').textContent = `-$${CARD.annualFee}`;
-    document.getElementById('annual-fee-y1').textContent = `First year: -$${CARD.annualFee}`;
+    document.getElementById('annual-fee').textContent = CARD.annualFee ? `-$${CARD.annualFee}` : '$0';
+    document.getElementById('annual-fee-y1').textContent = CARD.annualFee ? `First year: -$${CARD.annualFee}` : 'First year: $0';
 
     const netOngoing = ongoing - CARD.annualFee;
     const netY1 = firstYearTotal - CARD.annualFee;
