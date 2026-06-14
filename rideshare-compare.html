@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rideshare Comparison - Uber vs Lyft</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.5; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px 16px 60px; }
+.back-link { display: inline-flex; align-items: center; gap: 4px; color: #475569; text-decoration: none; font-size: 0.8rem; padding: 4px 0; }
+.back-link:hover { color: #0a3d91; }
+header { text-align: center; margin: 8px 0 24px; }
+header h1 { font-size: 1.6rem; color: #0a3d91; margin-bottom: 4px; }
+header p { color: #666; font-size: 0.85rem; }
+
+.section-title { font-size: 0.9rem; font-weight: 600; margin: 24px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; color: #0a3d91; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Trip type selector */
+.trip-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.trip-btn { padding: 8px 16px; border: 1px solid #cbd5e1; border-radius: 20px; background: white; cursor: pointer; font-size: 0.82rem; font-weight: 500; transition: all 0.15s; }
+.trip-btn:hover { border-color: #0a3d91; color: #0a3d91; }
+.trip-btn.active { background: #0a3d91; color: white; border-color: #0a3d91; }
+
+/* Ride profile (personal/business) selector */
+.mode-selector { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.mode-label { font-size: 0.82rem; font-weight: 600; color: #475569; margin-right: 4px; }
+.mode-note { font-size: 0.75rem; color: #475569; background: #f0f4ff; border: 1px solid #c7d6f3; border-radius: 8px; padding: 8px 12px; margin-bottom: 16px; line-height: 1.45; }
+.mode-note b { color: #0a3d91; }
+
+/* Columns layout */
+.compare-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.column { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.column-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
+.column-header h3 { font-size: 1rem; }
+.column-header.uber h3 { color: #000; }
+.column-header.lyft h3 { color: #FF00BF; }
+.badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+.badge.uber { background: #f0f0f0; color: #333; }
+.badge.lyft { background: #ffe6f9; color: #FF00BF; }
+
+/* Earning rows */
+.earning-group { margin-bottom: 14px; }
+.earning-group-title { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.earning-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-radius: 6px; margin-bottom: 3px; font-size: 0.82rem; }
+.earning-row:nth-child(even) { background: #f8fafc; }
+.earning-row .name { flex: 1; }
+.earning-row .rate { font-weight: 600; color: #0a3d91; white-space: nowrap; }
+.earning-row .note { font-size: 0.7rem; color: #94a3b8; margin-left: 6px; }
+
+/* Payment section */
+.payment-section { margin-top: 16px; }
+.payment-option { display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.15s; }
+.payment-option:hover { border-color: #0a3d91; }
+.payment-option.selected { border-color: #0a3d91; background: #f0f4ff; }
+.payment-option input[type="radio"] { accent-color: #0a3d91; }
+.payment-option label { flex: 1; cursor: pointer; font-size: 0.82rem; }
+.payment-option .cc-rate { font-weight: 600; color: #0a3d91; font-size: 0.82rem; }
+
+/* Gift card input */
+.gc-input-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 6px 8px; }
+.gc-input-row label { font-size: 0.78rem; color: #475569; }
+.gc-input-row input { width: 60px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 0.82rem; text-align: center; }
+
+/* Price inputs */
+.price-section { margin-top: 20px; }
+.price-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.price-input-group { display: flex; flex-direction: column; gap: 4px; }
+.price-input-group label { font-size: 0.78rem; font-weight: 500; color: #475569; }
+.price-input-group input { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 0.95rem; }
+.price-input-group input:focus { outline: none; border-color: #0a3d91; box-shadow: 0 0 0 2px rgba(10,61,145,0.15); }
+
+/* Results */
+.results { margin-top: 20px; }
+.result-card { background: white; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 10px; }
+.result-card h4 { font-size: 0.85rem; margin-bottom: 10px; color: #334155; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.result-item { text-align: center; padding: 12px; border-radius: 8px; background: #f8fafc; }
+.result-item.winner { background: #ecfdf5; border: 1px solid #a7f3d0; }
+.result-item .label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.result-item .value { font-size: 1.2rem; font-weight: 700; margin-top: 4px; }
+.result-item .value.uber-color { color: #000; }
+.result-item .value.lyft-color { color: #FF00BF; }
+.result-item .detail { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+.result-item .savings { font-size: 0.78rem; font-weight: 600; color: #16a34a; margin-top: 4px; }
+
+/* Point value input */
+.point-value-section { margin-top: 16px; padding: 10px; background: #fefce8; border-radius: 8px; border: 1px solid #fef08a; }
+.point-value-section h4 { font-size: 0.78rem; color: #854d0e; margin-bottom: 6px; }
+.pv-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.8rem; }
+.pv-row label { min-width: 120px; color: #475569; }
+.pv-row input { width: 60px; padding: 3px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem; text-align: center; }
+.pv-row .unit { font-size: 0.72rem; color: #94a3b8; }
+
+.no-trip { color: #94a3b8; font-style: italic; font-size: 0.82rem; padding: 12px; text-align: center; }
+
+@media (max-width: 700px) {
+  .compare-columns, .price-inputs, .result-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back-link">← Back to cards</a>
+  <header>
+    <h1>Rideshare Comparison</h1>
+    <p>Compare effective costs of Uber vs Lyft factoring in loyalty earnings, credit card rewards, and gift card discounts</p>
+  </header>
+
+  <h2 class="section-title">1. Select Trip Type</h2>
+  <div class="trip-selector" id="trip-selector"></div>
+  <div class="mode-selector">
+    <span class="mode-label">Ride profile:</span>
+    <button class="trip-btn active" data-mode="personal">Personal</button>
+    <button class="trip-btn" data-mode="business">Business</button>
+  </div>
+  <div class="mode-note" id="mode-note" style="display:none;">
+    Business earning shown reflects: <b>Uber</b> — Delta 2X Accelerator (requires your account linked to a company Uber for Business org).
+    <b>Lyft</b> — Hilton doubles to 6 pts/$, plus 6-8% Lyft Cash back on business-profile rides (free business profile).
+  </div>
+
+  <div id="earnings-section" style="display:none;">
+    <h2 class="section-title">2. Loyalty & Credit Card Earnings</h2>
+    <div class="compare-columns" id="compare-columns"></div>
+
+    <h2 class="section-title">3. Point/Mile Valuation</h2>
+    <div class="point-value-section" id="point-values"></div>
+
+    <h2 class="section-title">4. Trip Price (Optional)</h2>
+    <div class="price-inputs">
+      <div class="price-input-group">
+        <label for="uber-price">Uber Price ($)</label>
+        <input type="number" id="uber-price" placeholder="e.g. 35.00" step="0.01" min="0">
+      </div>
+      <div class="price-input-group">
+        <label for="lyft-price">Lyft Price ($)</label>
+        <input type="number" id="lyft-price" placeholder="e.g. 32.00" step="0.01" min="0">
+      </div>
+    </div>
+
+    <h2 class="section-title">5. Results</h2>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  tripTypes: [
+    { id: 'standard', label: 'Standard' },
+    { id: 'shared', label: 'Shared' },
+    { id: 'xl', label: 'XL' },
+    { id: 'comfort', label: 'Comfort' },
+    { id: 'black', label: 'Black / Premium' },
+    { id: 'reserved', label: 'Reserved / Scheduled' },
+    { id: 'airport', label: 'Airport (on-demand)' },
+  ],
+  uber: {
+    loyalty: [
+      // US rates. Delta: 3X Uber Reserve, 2X XL/Comfort/SUV/Black, 1X UberX airport. Standard UberX & Shared do not earn.
+      // Business (U4B 2X Accelerator): double miles on eligible rides when linked to a company Uber for Business org.
+      { id: 'delta', name: 'Delta SkyMiles', rate: { standard: 0, shared: 0, xl: 2, comfort: 2, black: 2, reserved: 3, airport: 1 }, businessRate: { standard: 0, shared: 0, xl: 4, comfort: 4, black: 4, reserved: 6, airport: 2 }, unit: 'mi/$', note: 'US rides' },
+      // Marriott: 3X Premium (XL/Comfort/SUV/Black), 2X UberX Reserve. Standard UberX, airport & Shared do not earn.
+      { id: 'marriott', name: 'Marriott Bonvoy', rate: { standard: 0, shared: 0, xl: 3, comfort: 3, black: 3, reserved: 2, airport: 0 }, unit: 'pts/$', note: 'US rides' },
+    ],
+    creditCards: [
+      { id: 'uber_cc_none', name: 'No specific card', rate: 0, unit: '%', note: '' },
+      { id: 'amex_green', name: 'Amex Green (3X transit)', rate: 3, unit: 'X MR', note: '3X transit incl. rideshare' },
+      { id: 'csp', name: 'Chase Sapphire Preferred (2X travel)', rate: 2, unit: 'X UR', note: '2X on travel' },
+      { id: 'boa_premium', name: 'BofA Premium Rewards (2X travel)', rate: 2, unit: 'X pts', note: 'Rideshare counts as travel' },
+      { id: 'boa_premium_gold', name: 'BofA Premium + Gold (25%)', rate: 2.5, unit: 'X pts', note: 'Preferred Rewards Gold' },
+      { id: 'boa_premium_plat', name: 'BofA Premium + Platinum (50%)', rate: 3, unit: 'X pts', note: 'Preferred Rewards Platinum' },
+      { id: 'boa_premium_honors', name: 'BofA Premium + Platinum Honors (75%)', rate: 3.5, unit: 'X pts', note: 'Preferred Rewards Platinum Honors' },
+      { id: 'venture_x', name: 'Capital One Venture X (2X)', rate: 2, unit: 'X miles', note: '2X on everything' },
+      { id: 'altitude_reserve', name: 'US Bank Altitude Reserve (3X mobile wallet)', rate: 3, unit: 'X pts', note: '3X via mobile wallet' },
+      { id: 'bilt', name: 'Bilt Mastercard (2X travel)', rate: 2, unit: 'X pts', note: '2X on travel' },
+      { id: 'uber_cc_gc', name: 'Gift Card', rate: 0, unit: '%', note: 'Enter discount below', isGiftCard: true },
+    ],
+  },
+  lyft: {
+    loyalty: [
+      // United: 4 scheduled airport; 3 Extra Comfort/Black/Black SUV/on-demand airport; 1 Standard/Priority Pickup/XL
+      { id: 'united_lyft', name: 'United MileagePlus', rate: { standard: 1, shared: 1, xl: 1, comfort: 3, black: 3, reserved: 4, airport: 3 }, unit: 'mi/$', note: '' },
+      // Hilton: flat 3 pts/$ on all rides; business profile rides earn double (6 pts/$)
+      { id: 'hilton_lyft', name: 'Hilton Honors', rate: { standard: 3, shared: 3, xl: 3, comfort: 3, black: 3, reserved: 3, airport: 3 }, businessRate: { standard: 6, shared: 6, xl: 6, comfort: 6, black: 6, reserved: 6, airport: 6 }, unit: 'pts/$', note: '' },
+      // Atmos (Alaska/Hawaiian): 2 everyday (Standard/Priority/XL); 3 airport + Extra Comfort/Black/Black SUV
+      { id: 'atmos_lyft', name: 'Alaska/Hawaiian (Atmos)', rate: { standard: 2, shared: 2, xl: 2, comfort: 3, black: 3, reserved: 3, airport: 3 }, unit: 'pts/$', note: '' },
+      // Bilt: flat 2x on eligible US rides
+      { id: 'bilt_loy_lyft', name: 'Bilt Rewards', rate: { standard: 2, shared: 2, xl: 2, comfort: 2, black: 2, reserved: 2, airport: 2 }, unit: 'pts/$', note: 'US rides' },
+    ],
+    creditCards: [
+      { id: 'lyft_cc_none', name: 'No specific card', rate: 0, unit: '%', note: '' },
+      { id: 'csr_lyft', name: 'Chase Sapphire Reserve (5x Lyft promo)', rate: 5, unit: 'X UR', note: '5x total pts on Lyft thru 9/2027 + $10/mo credit' },
+      { id: 'ink_pref_lyft', name: 'Chase Ink Preferred/Plus (5x Lyft promo)', rate: 5, unit: 'X UR', note: '5x total pts thru 9/2027' },
+      { id: 'ink_cash_lyft', name: 'Chase Ink Cash/Unlimited (5% Lyft promo)', rate: 5, unit: '%', note: '5% total cash back thru 9/2027', isCashback: true },
+      { id: 'freedom_lyft', name: 'Chase Freedom (2% Lyft promo)', rate: 2, unit: '%', note: '2% total cash back', isCashback: true },
+      { id: 'southwest_lyft', name: 'Southwest Priority/Performance (5x Lyft promo)', rate: 5, unit: 'X RR', note: '5x Rapid Rewards thru 12/2027' },
+      { id: 'amex_green_lyft', name: 'Amex Green (3X transit)', rate: 3, unit: 'X MR', note: '3X transit incl. rideshare' },
+      { id: 'boa_premium_lyft', name: 'BofA Premium Rewards (2X travel)', rate: 2, unit: 'X pts', note: 'Rideshare counts as travel' },
+      { id: 'boa_premium_gold_lyft', name: 'BofA Premium + Gold (25%)', rate: 2.5, unit: 'X pts', note: 'Preferred Rewards Gold' },
+      { id: 'boa_premium_plat_lyft', name: 'BofA Premium + Platinum (50%)', rate: 3, unit: 'X pts', note: 'Preferred Rewards Platinum' },
+      { id: 'boa_premium_honors_lyft', name: 'BofA Premium + Platinum Honors (75%)', rate: 3.5, unit: 'X pts', note: 'Preferred Rewards Platinum Honors' },
+      { id: 'venture_x_lyft', name: 'Capital One Venture X (2X)', rate: 2, unit: 'X miles', note: '2X on everything' },
+      { id: 'altitude_reserve_lyft', name: 'US Bank Altitude Reserve (3X mobile wallet)', rate: 3, unit: 'X pts', note: '3X via mobile wallet' },
+      { id: 'bilt_lyft', name: 'Bilt Mastercard (2X travel)', rate: 2, unit: 'X pts', note: '2X on travel' },
+      { id: 'lyft_cc_gc', name: 'Gift Card', rate: 0, unit: '%', note: 'Enter discount below', isGiftCard: true },
+    ],
+  },
+  // Cents per point/mile valuations
+  pointValues: {
+    'MR': { label: 'Amex MR', default: 1.6 },
+    'UR': { label: 'Chase UR', default: 1.5 },
+    'miles_cap1': { label: 'Capital One Miles', default: 1.56 },
+    'usbank_pts': { label: 'US Bank Points', default: 0.95 },
+    'bilt_pts': { label: 'Bilt Points', default: 1.6 },
+    'boa_pts': { label: 'BofA Premium Rewards Points', default: 1.0 },
+    'delta_mi': { label: 'Delta SkyMiles', default: 1.0 },
+    'united_mi': { label: 'United Miles', default: 1.2 },
+    'atmos_pts': { label: 'Alaska/Hawaiian (Atmos)', default: 1.3 },
+    'southwest_pts': { label: 'Southwest Rapid Rewards', default: 1.0 },
+    'hilton_pts': { label: 'Hilton Points', default: 0.5 },
+    'marriott_pts': { label: 'Marriott Points', default: 0.7 },
+    'cash': { label: 'Cash Back', default: 1.0 },
+  },
+};
+
+// Map credit cards to their point currency
+const CC_CURRENCY = {
+  // Uber cards
+  amex_green: 'MR',
+  csp: 'UR',
+  boa_premium: 'boa_pts', boa_premium_gold: 'boa_pts', boa_premium_plat: 'boa_pts', boa_premium_honors: 'boa_pts',
+  venture_x: 'miles_cap1',
+  altitude_reserve: 'usbank_pts',
+  bilt: 'bilt_pts',
+  // Lyft cards
+  csr_lyft: 'UR', ink_pref_lyft: 'UR',
+  ink_cash_lyft: 'cash', freedom_lyft: 'cash',
+  southwest_lyft: 'southwest_pts',
+  amex_green_lyft: 'MR',
+  boa_premium_lyft: 'boa_pts', boa_premium_gold_lyft: 'boa_pts', boa_premium_plat_lyft: 'boa_pts', boa_premium_honors_lyft: 'boa_pts',
+  venture_x_lyft: 'miles_cap1',
+  altitude_reserve_lyft: 'usbank_pts',
+  bilt_lyft: 'bilt_pts',
+};
+
+const LOYALTY_CURRENCY = {
+  // Uber partners
+  delta: 'delta_mi', marriott: 'marriott_pts',
+  // Lyft partners
+  united_lyft: 'united_mi', hilton_lyft: 'hilton_pts',
+  atmos_lyft: 'atmos_pts', bilt_loy_lyft: 'bilt_pts',
+};
+
+let selectedTrip = null;
+let rideMode = 'personal';
+let selectedLoyalty = { uber: null, lyft: null };
+let selectedCC = { uber: 'uber_cc_none', lyft: 'lyft_cc_none' };
+let gcDiscount = { uber: 15, lyft: 10 };
+
+// Loyalty rate for the selected ride profile (business uses businessRate when defined)
+function loyaltyRate(loy, trip) {
+  if (rideMode === 'business' && loy.businessRate) return loy.businessRate[trip];
+  return loy.rate[trip];
+}
+
+// Lyft Business Cash: 8% on airport/scheduled/premium, 6% otherwise. Business-profile rides only (Lyft).
+function businessCashPct(service) {
+  if (rideMode !== 'business' || service !== 'lyft') return 0;
+  return ['comfort', 'black', 'reserved', 'airport'].includes(selectedTrip) ? 8 : 6;
+}
+
+// Build the earnings breakdown line for results
+function earningsDetail(e) {
+  const parts = [`Loyalty: ${e.loyaltyEarnPct.toFixed(1)}%`, `CC: ${e.ccEarnPct.toFixed(1)}%`];
+  if (e.gcDiscountPct > 0) parts.push(`GC: ${e.gcDiscountPct.toFixed(1)}%`);
+  if (e.bizCashPct > 0) parts.push(`Lyft Cash: ${e.bizCashPct.toFixed(1)}%`);
+  return parts.join(' | ');
+}
+
+function init() {
+  renderTripSelector();
+  renderModeSelector();
+  document.getElementById('uber-price').addEventListener('input', calculate);
+  document.getElementById('lyft-price').addEventListener('input', calculate);
+}
+
+function renderModeSelector() {
+  document.querySelectorAll('.mode-selector .trip-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-selector .trip-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      rideMode = btn.dataset.mode;
+      document.getElementById('mode-note').style.display = rideMode === 'business' ? 'block' : 'none';
+      if (selectedTrip) {
+        setDefaultLoyalty();
+        renderColumns();
+        calculate();
+      }
+    });
+  });
+}
+
+function renderTripSelector() {
+  const el = document.getElementById('trip-selector');
+  el.innerHTML = DATA.tripTypes.map(t =>
+    `<button class="trip-btn" data-trip="${t.id}">${t.label}</button>`
+  ).join('');
+  el.addEventListener('click', e => {
+    const btn = e.target.closest('.trip-btn');
+    if (!btn) return;
+    el.querySelectorAll('.trip-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedTrip = btn.dataset.trip;
+    setDefaultLoyalty();
+    document.getElementById('earnings-section').style.display = '';
+    renderColumns();
+    renderPointValues();
+    calculate();
+  });
+}
+
+// Default loyalty: Delta for Uber (if it earns on this trip), Alaska/Hawaiian (Atmos) for Lyft
+function setDefaultLoyalty() {
+  const uberDelta = DATA.uber.loyalty.find(l => l.id === 'delta');
+  selectedLoyalty.uber = (uberDelta && loyaltyRate(uberDelta, selectedTrip) > 0) ? 'delta' : null;
+  const lyftAtmos = DATA.lyft.loyalty.find(l => l.id === 'atmos_lyft');
+  selectedLoyalty.lyft = (lyftAtmos && loyaltyRate(lyftAtmos, selectedTrip) > 0) ? 'atmos_lyft' : null;
+}
+
+function renderColumns() {
+  const el = document.getElementById('compare-columns');
+  el.innerHTML = renderColumn('uber') + renderColumn('lyft');
+  el.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', onSelectionChange));
+  el.querySelectorAll('.gc-discount').forEach(r => r.addEventListener('input', onGcChange));
+}
+
+function renderColumn(service) {
+  const data = DATA[service];
+  const loyalty = data.loyalty.filter(l => loyaltyRate(l, selectedTrip) > 0);
+  const headerClass = service === 'uber' ? 'uber' : 'lyft';
+
+  let html = `<div class="column"><div class="column-header ${headerClass}"><h3>${service.charAt(0).toUpperCase() + service.slice(1)}</h3></div>`;
+
+  // Loyalty partners
+  html += `<div class="earning-group"><div class="earning-group-title">Loyalty Partner (select one)</div>`;
+  html += `<div class="payment-option ${!selectedLoyalty[service] ? 'selected' : ''}">
+    <input type="radio" name="${service}-loyalty" id="${service}-loyalty-none" value="" ${!selectedLoyalty[service] ? 'checked' : ''}>
+    <label for="${service}-loyalty-none">None</label><span class="cc-rate">—</span></div>`;
+  loyalty.forEach(l => {
+    const rate = loyaltyRate(l, selectedTrip);
+    html += `<div class="payment-option ${selectedLoyalty[service] === l.id ? 'selected' : ''}">
+      <input type="radio" name="${service}-loyalty" id="${service}-loyalty-${l.id}" value="${l.id}" ${selectedLoyalty[service] === l.id ? 'checked' : ''}>
+      <label for="${service}-loyalty-${l.id}">${l.name}</label>
+      <span class="cc-rate">${rate} ${l.unit}</span>
+      ${l.note ? `<span class="note">${l.note}</span>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Credit cards
+  html += `<div class="earning-group"><div class="earning-group-title">Payment Method (select one)</div>`;
+  data.creditCards.forEach(cc => {
+    const isGC = cc.isGiftCard;
+    html += `<div class="payment-option ${selectedCC[service] === cc.id ? 'selected' : ''}">
+      <input type="radio" name="${service}-cc" id="${service}-cc-${cc.id}" value="${cc.id}" ${selectedCC[service] === cc.id ? 'checked' : ''}>
+      <label for="${service}-cc-${cc.id}">${cc.name}</label>
+      ${!isGC && cc.rate > 0 ? `<span class="cc-rate">${cc.rate}${cc.unit}</span>` : ''}
+    </div>`;
+    if (isGC) {
+      html += `<div class="gc-input-row" style="display:${selectedCC[service] === cc.id ? 'flex' : 'none'}" data-gc="${service}">
+        <label>Discount %:</label>
+        <input type="number" class="gc-discount" data-service="${service}" min="0" max="50" step="0.5" value="${gcDiscount[service]}">
+        <span class="unit">% off face value</span>
+      </div>`;
+    }
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+function renderPointValues() {
+  const el = document.getElementById('point-values');
+  let html = '<h4>Set your personal point/mile valuations (cents per point)</h4>';
+  Object.entries(DATA.pointValues).forEach(([key, pv]) => {
+    const stored = localStorage.getItem('pv_' + key);
+    const val = stored !== null ? parseFloat(stored) : pv.default;
+    html += `<div class="pv-row">
+      <label>${pv.label}</label>
+      <input type="number" class="pv-input" data-key="${key}" value="${val}" min="0" max="10" step="0.1">
+      <span class="unit">¢ / point</span>
+    </div>`;
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.pv-input').forEach(inp => inp.addEventListener('input', e => {
+    localStorage.setItem('pv_' + e.target.dataset.key, e.target.value);
+    calculate();
+  }));
+}
+
+function getPointValue(key) {
+  const inp = document.querySelector(`.pv-input[data-key="${key}"]`);
+  return inp ? parseFloat(inp.value) || 0 : (DATA.pointValues[key]?.default || 0);
+}
+
+function onSelectionChange(e) {
+  const name = e.target.name;
+  const val = e.target.value;
+  if (name.includes('-loyalty')) {
+    const service = name.split('-')[0];
+    selectedLoyalty[service] = val || null;
+  } else if (name.includes('-cc')) {
+    const service = name.split('-')[0];
+    selectedCC[service] = val;
+    // Show/hide GC input
+    document.querySelectorAll(`[data-gc="${service}"]`).forEach(row => {
+      row.style.display = val.includes('gc') ? 'flex' : 'none';
+    });
+  }
+  // Update selected styling
+  e.target.closest('.earning-group').querySelectorAll('.payment-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.querySelector('input').checked);
+  });
+  calculate();
+}
+
+function onGcChange(e) {
+  const service = e.target.dataset.service;
+  gcDiscount[service] = parseFloat(e.target.value) || 0;
+  calculate();
+}
+
+function computeEarnings(service) {
+  const data = DATA[service];
+  let loyaltyEarnPct = 0; // value as % of trip cost
+  let ccEarnPct = 0;
+  let gcDiscountPct = 0;
+
+  // Loyalty earnings
+  if (selectedLoyalty[service]) {
+    const loy = data.loyalty.find(l => l.id === selectedLoyalty[service]);
+    if (loy) {
+      const rate = loyaltyRate(loy, selectedTrip);
+      const currency = LOYALTY_CURRENCY[loy.id];
+      const cpp = getPointValue(currency);
+      loyaltyEarnPct = rate * cpp; // points per dollar * cents per point = cents back per dollar = % back
+    }
+  }
+
+  // Credit card earnings
+  const cc = data.creditCards.find(c => c.id === selectedCC[service]);
+  if (cc && cc.isGiftCard) {
+    gcDiscountPct = gcDiscount[service];
+  } else if (cc && cc.rate > 0) {
+    const currency = CC_CURRENCY[cc.id];
+    const cpp = currency ? getPointValue(currency) : 1.0;
+    ccEarnPct = cc.rate * cpp; // multiplier * cents per point = cents back per dollar = % back
+  }
+
+  // Lyft Business Cash (business-profile rides on Lyft); Lyft Cash valued at ~1¢, so % is direct
+  const bizCashPct = businessCashPct(service);
+
+  return { loyaltyEarnPct, ccEarnPct, gcDiscountPct, bizCashPct, totalPct: loyaltyEarnPct + ccEarnPct + gcDiscountPct + bizCashPct };
+}
+
+function calculate() {
+  if (!selectedTrip) return;
+  const uberEarnings = computeEarnings('uber');
+  const lyftEarnings = computeEarnings('lyft');
+  const uberPrice = parseFloat(document.getElementById('uber-price').value) || 0;
+  const lyftPrice = parseFloat(document.getElementById('lyft-price').value) || 0;
+
+  const el = document.getElementById('results');
+  let html = '';
+
+  if (uberPrice > 0 || lyftPrice > 0) {
+    // Show effective prices
+    html += `<div class="result-card"><h4>Effective Price After Rewards</h4><div class="result-grid">`;
+    if (uberPrice > 0) {
+      const uberEffective = uberPrice * (1 - uberEarnings.totalPct / 100);
+      const uberSavings = uberPrice - uberEffective;
+      html += `<div class="result-item ${lyftPrice > 0 && uberEffective <= lyftPrice * (1 - lyftEarnings.totalPct / 100) ? 'winner' : ''}">
+        <div class="label">Uber</div>
+        <div class="value uber-color">$${uberEffective.toFixed(2)}</div>
+        <div class="detail">List: $${uberPrice.toFixed(2)} | Savings: $${uberSavings.toFixed(2)}</div>
+        <div class="detail">${earningsDetail(uberEarnings)}</div>
+      </div>`;
+    }
+    if (lyftPrice > 0) {
+      const lyftEffective = lyftPrice * (1 - lyftEarnings.totalPct / 100);
+      const lyftSavings = lyftPrice - lyftEffective;
+      html += `<div class="result-item ${uberPrice > 0 && lyftEffective < uberPrice * (1 - uberEarnings.totalPct / 100) ? 'winner' : ''}">
+        <div class="label">Lyft</div>
+        <div class="value lyft-color">$${lyftEffective.toFixed(2)}</div>
+        <div class="detail">List: $${lyftPrice.toFixed(2)} | Savings: $${lyftSavings.toFixed(2)}</div>
+        <div class="detail">${earningsDetail(lyftEarnings)}</div>
+      </div>`;
+    }
+    html += `</div></div>`;
+  } else {
+    // Show percentage discounts
+    html += `<div class="result-card"><h4>Expected Discount (% off trip cost)</h4><div class="result-grid">`;
+    html += `<div class="result-item ${uberEarnings.totalPct >= lyftEarnings.totalPct ? 'winner' : ''}">
+      <div class="label">Uber</div>
+      <div class="value uber-color">${uberEarnings.totalPct.toFixed(1)}% off</div>
+      <div class="detail">${earningsDetail(uberEarnings)}</div>
+    </div>`;
+    html += `<div class="result-item ${lyftEarnings.totalPct > uberEarnings.totalPct ? 'winner' : ''}">
+      <div class="label">Lyft</div>
+      <div class="value lyft-color">${lyftEarnings.totalPct.toFixed(1)}% off</div>
+      <div class="detail">${earningsDetail(lyftEarnings)}</div>
+    </div>`;
+    html += `</div></div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+init();
+</script>
+</body>
+</html>
