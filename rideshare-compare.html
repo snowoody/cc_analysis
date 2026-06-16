@@ -39,9 +39,20 @@ header p { color: #666; font-size: 0.85rem; }
 .badge.uber { background: #f0f0f0; color: #333; }
 .badge.lyft { background: #ffe6f9; color: #FF00BF; }
 
+/* Membership (Uber One / Lyft Pink) */
+.membership-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; margin-bottom: 12px; background: #f0f4ff; border: 1px solid #c7d6f3; border-radius: 8px; }
+.membership-row label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+.membership-row input[type="checkbox"] { accent-color: #0a3d91; width: 16px; height: 16px; cursor: pointer; }
+
+/* Dropdown select groups for loyalty / payment */
+.select-group { margin-bottom: 10px; }
+.select-label { display: block; font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.select-group select { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: white; color: #1a1a2e; font-size: 0.85rem; cursor: pointer; outline: none; }
+.select-group select:hover { border-color: #0a3d91; }
+.select-group select:focus { border-color: #0a3d91; box-shadow: 0 0 0 2px rgba(10,61,145,0.15); }
+
 /* Earning rows */
-.earning-group { margin-bottom: 14px; }
-.earning-group-title { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.earning-group { margin-bottom: 14px; }.earning-group-title { font-size: 0.72rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
 .earning-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-radius: 6px; margin-bottom: 3px; font-size: 0.82rem; }
 .earning-row:nth-child(even) { background: #f8fafc; }
 .earning-row .name { flex: 1; }
@@ -120,13 +131,7 @@ header p { color: #666; font-size: 0.85rem; }
   </div>
 
   <div id="earnings-section" style="display:none;">
-    <h2 class="section-title">2. Loyalty & Credit Card Earnings</h2>
-    <div class="compare-columns" id="compare-columns"></div>
-
-    <h2 class="section-title">3. Point/Mile Valuation</h2>
-    <div class="point-value-section" id="point-values"></div>
-
-    <h2 class="section-title">4. Trip Price (Optional)</h2>
+    <h2 class="section-title">2. Trip Price (Optional)</h2>
     <div class="price-inputs">
       <div class="price-input-group">
         <label for="uber-price">Uber Price ($)</label>
@@ -138,8 +143,14 @@ header p { color: #666; font-size: 0.85rem; }
       </div>
     </div>
 
-    <h2 class="section-title">5. Results</h2>
+    <h2 class="section-title">3. Results</h2>
     <div class="results" id="results"></div>
+
+    <h2 class="section-title">4. Loyalty & Credit Card Earnings</h2>
+    <div class="compare-columns" id="compare-columns"></div>
+
+    <h2 class="section-title">5. Point/Mile Valuation</h2>
+    <div class="point-value-section" id="point-values"></div>
   </div>
 </div>
 
@@ -251,10 +262,17 @@ const LOYALTY_CURRENCY = {
   atmos_lyft: 'atmos_pts', bilt_loy_lyft: 'bilt_pts',
 };
 
+// Paid membership ride benefits (effective % off the ride)
+const MEMBERSHIP = {
+  uber: { label: 'Uber One', pct: 6, desc: '6% back in Uber One credits' },
+  lyft: { label: 'Lyft Pink', pct: 5, desc: '5% off eligible rides' },
+};
+
 let selectedTrip = null;
 let rideMode = 'personal';
+let membership = { uber: true, lyft: false };
 let selectedLoyalty = { uber: null, lyft: null };
-let selectedCC = { uber: 'uber_cc_none', lyft: 'lyft_cc_none' };
+let selectedCC = { uber: 'uber_cc_gc', lyft: 'lyft_cc_gc' };
 let gcDiscount = { uber: 15, lyft: 10 };
 
 // Loyalty rate for the selected ride profile (business uses businessRate when defined)
@@ -274,6 +292,7 @@ function earningsDetail(e) {
   const parts = [`Loyalty: ${e.loyaltyEarnPct.toFixed(1)}%`, `CC: ${e.ccEarnPct.toFixed(1)}%`];
   if (e.gcDiscountPct > 0) parts.push(`GC: ${e.gcDiscountPct.toFixed(1)}%`);
   if (e.bizCashPct > 0) parts.push(`Lyft Cash: ${e.bizCashPct.toFixed(1)}%`);
+  if (e.membershipPct > 0) parts.push(`${e.membershipLabel}: ${e.membershipPct.toFixed(1)}%`);
   return parts.join(' | ');
 }
 
@@ -330,8 +349,14 @@ function setDefaultLoyalty() {
 function renderColumns() {
   const el = document.getElementById('compare-columns');
   el.innerHTML = renderColumn('uber') + renderColumn('lyft');
-  el.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', onSelectionChange));
+  el.querySelectorAll('.loyalty-select, .cc-select').forEach(s => s.addEventListener('change', onSelectChange));
   el.querySelectorAll('.gc-discount').forEach(r => r.addEventListener('input', onGcChange));
+  el.querySelectorAll('.membership-toggle').forEach(c => c.addEventListener('change', onMembershipChange));
+}
+
+function onMembershipChange(e) {
+  membership[e.target.dataset.service] = e.target.checked;
+  calculate();
 }
 
 function renderColumn(service) {
@@ -341,40 +366,47 @@ function renderColumn(service) {
 
   let html = `<div class="column"><div class="column-header ${headerClass}"><h3>${service.charAt(0).toUpperCase() + service.slice(1)}</h3></div>`;
 
-  // Loyalty partners
-  html += `<div class="earning-group"><div class="earning-group-title">Loyalty Partner (select one)</div>`;
-  html += `<div class="payment-option ${!selectedLoyalty[service] ? 'selected' : ''}">
-    <input type="radio" name="${service}-loyalty" id="${service}-loyalty-none" value="" ${!selectedLoyalty[service] ? 'checked' : ''}>
-    <label for="${service}-loyalty-none">None</label><span class="cc-rate">—</span></div>`;
-  loyalty.forEach(l => {
-    const rate = loyaltyRate(l, selectedTrip);
-    html += `<div class="payment-option ${selectedLoyalty[service] === l.id ? 'selected' : ''}">
-      <input type="radio" name="${service}-loyalty" id="${service}-loyalty-${l.id}" value="${l.id}" ${selectedLoyalty[service] === l.id ? 'checked' : ''}>
-      <label for="${service}-loyalty-${l.id}">${l.name}</label>
-      <span class="cc-rate">${rate} ${l.unit}</span>
-      ${l.note ? `<span class="note">${l.note}</span>` : ''}
-    </div>`;
-  });
-  html += `</div>`;
+  // Membership (Uber One / Lyft Pink)
+  const mem = MEMBERSHIP[service];
+  html += `<div class="membership-row">
+    <label><input type="checkbox" class="membership-toggle" data-service="${service}" ${membership[service] ? 'checked' : ''}> ${mem.label}</label>
+    <span class="cc-rate">${mem.desc}</span>
+  </div>`;
 
-  // Credit cards
-  html += `<div class="earning-group"><div class="earning-group-title">Payment Method (select one)</div>`;
-  data.creditCards.forEach(cc => {
-    const isGC = cc.isGiftCard;
-    html += `<div class="payment-option ${selectedCC[service] === cc.id ? 'selected' : ''}">
-      <input type="radio" name="${service}-cc" id="${service}-cc-${cc.id}" value="${cc.id}" ${selectedCC[service] === cc.id ? 'checked' : ''}>
-      <label for="${service}-cc-${cc.id}">${cc.name}</label>
-      ${!isGC && cc.rate > 0 ? `<span class="cc-rate">${cc.rate}${cc.unit}</span>` : ''}
-    </div>`;
-    if (isGC) {
-      html += `<div class="gc-input-row" style="display:${selectedCC[service] === cc.id ? 'flex' : 'none'}" data-gc="${service}">
-        <label>Discount %:</label>
-        <input type="number" class="gc-discount" data-service="${service}" min="0" max="50" step="0.5" value="${gcDiscount[service]}">
-        <span class="unit">% off face value</span>
-      </div>`;
-    }
-  });
-  html += `</div></div>`;
+  // Loyalty partner dropdown
+  html += `<div class="select-group">
+    <label class="select-label">Loyalty Partner</label>
+    <select class="loyalty-select" data-service="${service}">
+      <option value="" ${!selectedLoyalty[service] ? 'selected' : ''}>None</option>
+      ${loyalty.map(l => {
+        const rate = loyaltyRate(l, selectedTrip);
+        const noteTxt = l.note ? ` (${l.note})` : '';
+        return `<option value="${l.id}" ${selectedLoyalty[service] === l.id ? 'selected' : ''}>${l.name} — ${rate} ${l.unit}${noteTxt}</option>`;
+      }).join('')}
+    </select>
+  </div>`;
+
+  // Payment method dropdown
+  html += `<div class="select-group">
+    <label class="select-label">Payment Method</label>
+    <select class="cc-select" data-service="${service}">
+      ${data.creditCards.map(cc => {
+        const rateLabel = cc.isGiftCard ? '' : (cc.rate > 0 ? ` — ${cc.rate}${cc.unit}` : '');
+        return `<option value="${cc.id}" ${selectedCC[service] === cc.id ? 'selected' : ''}>${cc.name}${rateLabel}</option>`;
+      }).join('')}
+    </select>
+  </div>`;
+
+  // Gift card discount input (shown when a gift card option is selected)
+  const selCard = data.creditCards.find(c => c.id === selectedCC[service]);
+  const showGc = !!(selCard && selCard.isGiftCard);
+  html += `<div class="gc-input-row" style="display:${showGc ? 'flex' : 'none'}" data-gc="${service}">
+    <label>Gift card discount %:</label>
+    <input type="number" class="gc-discount" data-service="${service}" min="0" max="50" step="0.5" value="${gcDiscount[service]}">
+    <span class="unit">% off face value</span>
+  </div>`;
+
+  html += `</div>`;
   return html;
 }
 
@@ -402,24 +434,18 @@ function getPointValue(key) {
   return inp ? parseFloat(inp.value) || 0 : (DATA.pointValues[key]?.default || 0);
 }
 
-function onSelectionChange(e) {
-  const name = e.target.name;
+function onSelectChange(e) {
+  const service = e.target.dataset.service;
   const val = e.target.value;
-  if (name.includes('-loyalty')) {
-    const service = name.split('-')[0];
+  if (e.target.classList.contains('loyalty-select')) {
     selectedLoyalty[service] = val || null;
-  } else if (name.includes('-cc')) {
-    const service = name.split('-')[0];
+  } else if (e.target.classList.contains('cc-select')) {
     selectedCC[service] = val;
-    // Show/hide GC input
+    const selCard = DATA[service].creditCards.find(c => c.id === val);
     document.querySelectorAll(`[data-gc="${service}"]`).forEach(row => {
-      row.style.display = val.includes('gc') ? 'flex' : 'none';
+      row.style.display = (selCard && selCard.isGiftCard) ? 'flex' : 'none';
     });
   }
-  // Update selected styling
-  e.target.closest('.earning-group').querySelectorAll('.payment-option').forEach(opt => {
-    opt.classList.toggle('selected', opt.querySelector('input').checked);
-  });
   calculate();
 }
 
@@ -459,7 +485,11 @@ function computeEarnings(service) {
   // Lyft Business Cash (business-profile rides on Lyft); Lyft Cash valued at ~1¢, so % is direct
   const bizCashPct = businessCashPct(service);
 
-  return { loyaltyEarnPct, ccEarnPct, gcDiscountPct, bizCashPct, totalPct: loyaltyEarnPct + ccEarnPct + gcDiscountPct + bizCashPct };
+  // Paid membership benefit (Uber One credits / Lyft Pink discount), effective % off
+  const membershipPct = membership[service] ? MEMBERSHIP[service].pct : 0;
+  const membershipLabel = MEMBERSHIP[service].label;
+
+  return { loyaltyEarnPct, ccEarnPct, gcDiscountPct, bizCashPct, membershipPct, membershipLabel, totalPct: loyaltyEarnPct + ccEarnPct + gcDiscountPct + bizCashPct + membershipPct };
 }
 
 function calculate() {
