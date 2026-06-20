@@ -183,7 +183,13 @@
     const text = TERMS[name];
     if (!text) return;
     document.getElementById('modal-title').textContent = name;
-    document.getElementById('modal-body').textContent = text;
+    // Escape HTML, then render _..._ markers as underlined text.
+    const html = String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/_([^_]+)_/g, '<u>$1</u>');
+    document.getElementById('modal-body').innerHTML = html;
     document.getElementById('modal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
