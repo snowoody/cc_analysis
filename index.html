@@ -14,13 +14,20 @@ header p { color: #666; font-size: 0.95rem; max-width: 620px; margin: 0 auto; }
 
 .section-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin: 28px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
 
-.section-header { display: flex; justify-content: space-between; align-items: center; margin: 28px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+.section-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 28px 0 14px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
 .section-header .section-title { margin: 0; padding-bottom: 0; border: none; }
+.header-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.search-control input { font-size: 0.85rem; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #1a1a2e; outline: none; width: 200px; }
+.search-control input::placeholder { color: #94a3b8; }
+.search-control input:hover { border-color: #0a3d91; }
+.search-control input:focus { border-color: #0a3d91; box-shadow: 0 0 0 2px rgba(10,61,145,0.15); }
 .sort-control { display: flex; align-items: center; gap: 8px; }
 .sort-control label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
 .sort-control select { font-size: 0.85rem; padding: 5px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #1a1a2e; cursor: pointer; outline: none; }
 .sort-control select:hover { border-color: #0a3d91; }
 .sort-control select:focus { border-color: #0a3d91; box-shadow: 0 0 0 2px rgba(10,61,145,0.15); }
+
+.no-results { text-align: center; color: #94a3b8; font-size: 0.9rem; padding: 32px 0; }
 
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
 
@@ -63,15 +70,21 @@ footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #94a3b
 
   <div class="section-header">
     <h2 class="section-title">Available Cards</h2>
-    <div class="sort-control">
-      <label for="sort-select">Sort by</label>
-      <select id="sort-select" onchange="renderCards()">
-        <option value="netYear1">Net Value (Year 1)</option>
-        <option value="netOngoing">Net Value (Ongoing)</option>
-      </select>
+    <div class="header-controls">
+      <div class="search-control">
+        <input type="search" id="search-input" placeholder="Search cards…" oninput="renderCards()" aria-label="Search cards by name">
+      </div>
+      <div class="sort-control">
+        <label for="sort-select">Sort by</label>
+        <select id="sort-select" onchange="renderCards()">
+          <option value="netYear1">Net Value (Year 1)</option>
+          <option value="netOngoing">Net Value (Ongoing)</option>
+        </select>
+      </div>
     </div>
   </div>
   <div class="card-grid" id="card-grid"></div>
+  <p class="no-results" id="no-results" hidden>No cards match your search.</p>
 
   <footer>Net values are computed from the default slider settings on each card's analysis page.</footer>
 </div>
@@ -98,6 +111,7 @@ footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #94a3b
 <script src="data/citi-aadvantage-business.js"></script>
 <script src="data/chase-prime-visa.js"></script>
 <script src="data/chase-amazon-visa.js"></script>
+<script src="data/chase-sapphire-reserve.js"></script>
 
 <script>
 function dollarValue(b, sliderVal) {
@@ -130,11 +144,20 @@ const grid = document.getElementById('card-grid');
 
 function renderCards() {
   const sortBy = document.getElementById('sort-select').value;
-  const cards = (window.CARDS || []).map(card => {
-    const { netOngoing, netYear1 } = computeNetValues(card);
-    return { card, netOngoing, netYear1 };
-  });
+  const query = (document.getElementById('search-input').value || '').trim().toLowerCase();
+  const cards = (window.CARDS || [])
+    .filter(card => {
+      if (!query) return true;
+      const haystack = `${card.name} ${card.issuer || ''} ${card.network || ''} ${(card.categories || []).join(' ')}`.toLowerCase();
+      return haystack.includes(query);
+    })
+    .map(card => {
+      const { netOngoing, netYear1 } = computeNetValues(card);
+      return { card, netOngoing, netYear1 };
+    });
   cards.sort((a, b) => b[sortBy] - a[sortBy]);
+
+  document.getElementById('no-results').hidden = cards.length > 0;
 
   grid.innerHTML = '';
   cards.forEach(({ card, netOngoing, netYear1 }) => {
