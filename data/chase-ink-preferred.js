@@ -11,8 +11,6 @@
 
     "DashPass Membership & $10 Monthly Grocery Credit": `Complimentary DashPass: Get complimentary access to DashPass with your Chase Ink Business Preferred card. Enjoy $0 delivery fees and reduced service fees on eligible orders for a minimum of one year, when you activate by December 31, 2027. Plus, as soon as you activate your membership, you'll receive up to $10 a month on grocery and retail DoorDash orders. DashPass membership value: $120/year. Monthly grocery credit value: up to $120/year.`,
 
-    "Transfer Points to Travel Partners": `Point Transfer: Transfer your Ultimate Rewards points at a 1:1 ratio to leading airline and hotel loyalty programs including United MileagePlus, Southwest Rapid Rewards, World of Hyatt, Marriott Bonvoy, British Airways Avios, Air France/KLM Flying Blue, Singapore Airlines KrisFlyer, and more. This is the key differentiator vs. Ink Cash/Unlimited – the ability to transfer points often yields 1.5–2.5¢ per point in value.`,
-
     "No Foreign Transaction Fees": `No Foreign Transaction Fees: You will pay no foreign transaction fees when you use your card for purchases made outside of the United States.`,
 
     "Purchase Protection": `Purchase Protection: Covers your eligible new purchases for 120 days from the date of purchase against damage or theft up to $10,000 per item. Restrictions, limitations and exclusions apply. Specific limitations apply to New York residents: coverage period is 90 days from the date of purchase.`,
@@ -37,7 +35,7 @@
 
     // Perks & Credits
     { section: "Perks & Credits", name: "DashPass Membership & $10 Monthly Grocery Credit", desc: "Complimentary DashPass ($120 value) + up to $10/month grocery credit on DoorDash through 12/31/2027. Value depends on DoorDash usage.", min: 0, max: 240, default: 0 },
-    { name: "Transfer Points to Travel Partners", desc: "1:1 transfer to airline/hotel partners (United, Hyatt, Southwest, etc.). Enables 1.5-2.5¢/pt value. Estimate additional annual value beyond base redemption.", min: 0, max: 500, default: 0 },
+
 
     // Travel & Purchase Protection
     { section: "Travel & Purchase Protection", name: "Auto Rental Coverage", desc: "Primary coverage for business rentals up to $75,000 for theft/collision damage in U.S. and abroad", min: 0, max: 200, default: 0 },
