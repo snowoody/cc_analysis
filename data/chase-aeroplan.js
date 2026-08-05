@@ -1,11 +1,11 @@
 // The Aeroplan® Card (Chase) data
 (function() {
   const terms = {
-    "60,000 Point Sign-On Bonus": `Earn 60,000 bonus points after you spend $3,000 on purchases in the first 3 months after your account is open.
+    "100,000 Point Sign-On Bonus": `Earn 75,000 bonus points after you spend $4,000 on purchases in the first 3 months from account opening, plus 25,000 bonus points after you spend a total of $20,000 on purchases in the first 12 months from account opening (for a possible total of 100,000 bonus points).
 
-This product is not available to either (i) current cardmembers of the Chase Aeroplan Card, or (ii) previous cardmembers of the Chase Aeroplan Card who received a new cardmember bonus for this card within the last 24 months. "Purchases" do not include balance transfers, cash advances, fees of any kind (including the annual fee), or other cash-like transactions. After qualifying, please allow 6 to 8 weeks for bonus points to post.
+This product is not available to either (i) current cardmembers of this credit card, or (ii) previous cardmembers of this credit card who received a new cardmember bonus for this credit card within the last 24 months. "Purchases" do not include balance transfers, cash advances, travelers checks, foreign currency, money orders, wire transfers or similar cash-like transactions, lottery tickets, casino gaming chips, race track wagers or similar betting transactions, any checks that access your account, interest, unauthorized or fraudulent charges, and fees of any kind, including an annual fee, if applicable. After qualifying, please allow 6 to 8 weeks for bonus points to post to your Chase Aeroplan Card account. Account must be open and not in default at the time of fulfillment.
 
-Aeroplan points are commonly valued around 1.3–1.5¢ each (e.g., The Points Guy). Adjust the slider to your own per-point value.`,
+Aeroplan points are commonly valued around 1.3–1.5¢ each. Adjust the slider to your own per-point value.`,
 
     "3X Points at Grocery Stores": `You'll earn 3 points for each $1 spent on purchases made at grocery stores. Purchases must be classified under the grocery store merchant category to earn the bonus rate; superstores, warehouse clubs, and some specialty retailers may not qualify.`,
 
@@ -66,7 +66,7 @@ Only valuable if you hold a points-earning Chase card and transfer large amounts
 
   const benefits = [
     // Sign-On Bonus (first year only)
-    { section: "Sign-On Bonus (First Year Only)", name: "60,000 Point Sign-On Bonus", desc: "60,000 Aeroplan bonus points after spending $3,000 on purchases in the first 3 months. Adjust your value per point.", min: 0, max: 2.5, default: 1.4, miles: 60000, firstYearOnly: true, comment: "Aeroplan points valued ~1.3–1.5¢ each. Not eligible if you've received a Chase Aeroplan bonus in the past 24 months." },
+    { section: "Sign-On Bonus (First Year Only)", name: "100,000 Point Sign-On Bonus", desc: "75,000 Aeroplan bonus points after spending $4,000 in the first 3 months, plus 25,000 bonus points after spending $20,000 total in the first 12 months. Adjust your value per point.", min: 0, max: 2.5, default: 1.4, miles: 75000, firstYearOnly: true, comment: "Default based on the 75K tier only; the extra 25K requires $20K total spend in 12 months, yielding lower marginal return. Not eligible if you've received a Chase Aeroplan bonus in the past 24 months. <a href=\"https://secure.chase.com/web/oao/application/card?sourceCode=HVDB\">Apply here</a>" },
 
     // Earning Potential
     { section: "Earning Potential (annual estimate)", name: "3X Points at Grocery Stores", desc: "3x Aeroplan points at grocery stores. Estimate annual dollar value earned (points ~1.4¢ each).", min: 0, max: 400, default: 0 },
@@ -88,7 +88,7 @@ Only valuable if you hold a points-earning Chase card and transfer large amounts
 
     // Other Benefits
     { section: "Other Benefits", name: "10% Bonus on Ultimate Rewards® Transfers", desc: "10% bonus when transferring 50,000+ Ultimate Rewards points in one transaction to Aeroplan (max 25,000 bonus points/year). Only count if you hold a UR-earning Chase card.", min: 0, max: 200, default: 75 },
-    { name: "Pay Yourself Back®", desc: "Redeem Aeroplan points for statement credits toward travel, dining, grocery, gas, and even the annual fee. Estimate annual value.", min: 0, max: 200, default: 0 },
+    { name: "Pay Yourself Back®", desc: "Redeem Aeroplan points for statement credits toward travel, dining, grocery, gas, and even the annual fee. Estimate annual value.", min: 0, max: 200, default: 0, comment: "Redemption rate is 1.25¢ per point for eligible travel and the annual fee." },
     { name: "No Foreign Transaction Fees", desc: "No foreign transaction fees on purchases made outside the U.S. Estimate annual savings based on international spend.", min: 0, max: 200, default: 0 },
 
     // Travel & Purchase Protection
@@ -109,7 +109,7 @@ Only valuable if you hold a points-earning Chase card and transfer large amounts
     type: 'Personal',
     categories: ['Travel', 'Airline', 'Points'],
     annualFee: 95,
-    signOnBonusLabel: '60,000 points',
+    signOnBonusLabel: '100,000 points',
     benefits: benefits,
     terms: terms,
   };
