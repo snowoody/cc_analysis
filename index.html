@@ -107,6 +107,7 @@ footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: #94a3b
 <script src="data/chase-sapphire-reserve-biz.js"></script>
 <script src="data/usbank-altitude-reserve.js"></script>
 <script src="data/usbank-altitude-connect.js"></script>
+<script src="data/usbank-altitude-connect-biz.js"></script>
 <script src="data/usbank-altitude-go.js"></script>
 <script src="data/usbank-cash-plus.js"></script>
 <script src="data/usbank-smartly.js"></script>
@@ -140,7 +141,7 @@ function computeNetValues(card) {
   });
   return {
     netOngoing: ongoing - card.annualFee,
-    netYear1: ongoing + firstYearBonus - card.annualFee,
+    netYear1: ongoing + firstYearBonus - (card.annualFeeFirstYear != null ? card.annualFeeFirstYear : card.annualFee),
   };
 }
 

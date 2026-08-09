@@ -167,10 +167,11 @@
     document.getElementById('total-benefits').textContent = `$${ongoing}`;
     document.getElementById('total-benefits-y1').textContent = `First year: $${firstYearTotal}`;
     document.getElementById('annual-fee').textContent = CARD.annualFee ? `-$${CARD.annualFee}` : '$0';
-    document.getElementById('annual-fee-y1').textContent = CARD.annualFee ? `First year: -$${CARD.annualFee}` : 'First year: $0';
+    const firstYearFee = CARD.annualFeeFirstYear != null ? CARD.annualFeeFirstYear : CARD.annualFee;
+    document.getElementById('annual-fee-y1').textContent = firstYearFee ? `First year: -$${firstYearFee}` : 'First year: $0';
 
     const netOngoing = ongoing - CARD.annualFee;
-    const netY1 = firstYearTotal - CARD.annualFee;
+    const netY1 = firstYearTotal - firstYearFee;
     const netEl = document.getElementById('net-value');
     netEl.textContent = (netOngoing >= 0 ? '+' : '') + `$${netOngoing}`;
     netEl.className = 'value ' + (netOngoing >= 0 ? 'positive' : 'negative');
