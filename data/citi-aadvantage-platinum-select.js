@@ -66,6 +66,22 @@ This is a limited-time promotional benefit (up to 6 qualifying trips). Value dep
     { name: "Add Authorized Users", desc: "Add authorized user cards at no extra charge to earn more miles. Value depends on additional spend you route through them.", min: 0, max: 100, default: 0 },
   ];
 
+  const productChanges = {
+    note: "Product changes must be requested by phone. Account must be open at least 12 months. As of early 2025, cross-family product changes (AAdvantage → ThankYou cards like Double Cash or Custom Cash) are no longer available per multiple data points. Options are now limited to other AAdvantage cards or Costco card.",
+    options: [
+      { name: "Citi® / AAdvantage® MileUp℠", url: "citi-aadvantage-mileup.html" },
+      { name: "Citi® / AAdvantage® Executive World Elite Mastercard®", url: "citi-aadvantage-executive.html" },
+      { name: "Citi Costco Anywhere Visa", url: "citi-costco-anywhere.html" },
+    ],
+    tips: [
+      "Account must be open for at least 12 months before a product change is allowed.",
+      "Cross-family changes (AAdvantage → ThankYou cards like Double Cash or Custom Cash) were blocked starting around March 2025.",
+      "You will not receive a sign-up bonus on a product change.",
+      "Call the number on the back of your card to request; no hard credit pull is required.",
+      "If your annual fee is coming due, ask about retention offers before downgrading — they may offer bonus miles to keep the card another year.",
+    ],
+  };
+
   const card = {
     id: 'citi-aadvantage-platinum-select',
     detailUrl: 'citi-aadvantage-platinum-select.html',
@@ -78,6 +94,7 @@ This is a limited-time promotional benefit (up to 6 qualifying trips). Value dep
     signOnBonusLabel: '80,000 miles',
     benefits: benefits,
     terms: terms,
+    productChanges: productChanges,
   };
 
   window.CARDS = window.CARDS || [];

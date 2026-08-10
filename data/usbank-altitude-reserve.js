@@ -69,6 +69,22 @@
     { name: "Emergency Evacuation", desc: "Up to $10,000 for medical transport to nearest facility", min: 0, max: 25, default: 0 },
   ];
 
+  const productChanges = {
+    note: "Card is no longer open to new applications (discontinued Nov 2024). Existing cardholders can request a product change via phone or chat.",
+    options: [
+      { name: "U.S. Bank Altitude Connect", url: "usbank-altitude-connect.html" },
+      { name: "U.S. Bank Altitude Go", url: "usbank-altitude-go.html" },
+      { name: "U.S. Bank Smartly", url: "usbank-smartly.html" },
+      { name: "U.S. Bank Cash+", url: "usbank-cash-plus.html" },
+    ],
+    tips: [
+      "Product change can be done via phone or online chat.",
+      "You may receive a prorated annual fee refund — data points suggest 1/12th per remaining month, and some have received a full refund.",
+      "Remaining points are converted to a statement credit at ~0.8 cpp if not redeemed before the change. Redeem to a U.S. Bank checking account at 1 cpp first.",
+      "No sign-up bonus is typically offered on a product change.",
+    ],
+  };
+
   const card = {
     id: 'usbank-altitude-reserve',
     detailUrl: 'usbank-altitude-reserve.html',
@@ -81,6 +97,7 @@
     signOnBonusLabel: 'None',
     benefits: benefits,
     terms: terms,
+    productChanges: productChanges,
   };
 
   window.CARDS = window.CARDS || [];

@@ -17,6 +17,7 @@
 
     buildPage();
     renderBenefits();
+    if (CARD.productChanges) renderProductChanges();
     setupEventListeners();
     updateSummary();
   }
@@ -68,6 +69,7 @@
         </div>
       </div>
       <div id="benefits-container"></div>
+      ${CARD.productChanges ? '<div id="product-changes-container"></div>' : ''}
     `;
     document.body.appendChild(main);
 
@@ -114,6 +116,31 @@
         </div>
       `);
     });
+  }
+
+  function renderProductChanges() {
+    const container = document.getElementById('product-changes-container');
+    const pc = CARD.productChanges;
+    if (!container || !pc) return;
+
+    let html = `<h2 class="section-title">Downgrade / Product Change Options</h2>`;
+    if (pc.note) {
+      html += `<div class="pc-note">${pc.note}</div>`;
+    }
+    if (pc.options && pc.options.length) {
+      html += `<ul class="pc-options-list">`;
+      pc.options.forEach(opt => {
+        const nameHtml = opt.url
+          ? `<a href="${opt.url}" class="pc-option-link">${opt.name}</a>`
+          : `<span class="pc-option-name">${opt.name}</span>`;
+        html += `<li>${nameHtml}</li>`;
+      });
+      html += `</ul>`;
+    }
+    if (pc.tips && pc.tips.length) {
+      html += `<div class="pc-tips"><div class="pc-tips-title">Tips</div><ul>${pc.tips.map(t => `<li>${t}</li>`).join('')}</ul></div>`;
+    }
+    container.innerHTML = html;
   }
 
   function setupEventListeners() {
