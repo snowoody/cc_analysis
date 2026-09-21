@@ -23,13 +23,15 @@
   }
 
   function dollarValue(b, sliderVal) {
-    return b.miles ? Math.round(b.miles * sliderVal / 100) : sliderVal;
+    const base = b.miles ? Math.round(b.miles * sliderVal / 100) : sliderVal;
+    return base + (b.fixedExtra || 0);
   }
 
   function formatDisplay(b, sliderVal) {
     if (b.miles) {
       const dollars = dollarValue(b, sliderVal);
-      return `$${dollars} <span style="font-size:0.75rem;color:#666;font-weight:500">(${sliderVal.toFixed(1)}¢/mi)</span>`;
+      const extra = b.fixedExtra ? ` + $${b.fixedExtra}` : '';
+      return `$${dollars} <span style="font-size:0.75rem;color:#666;font-weight:500">(${sliderVal.toFixed(1)}¢/mi${extra})</span>`;
     }
     return `$${sliderVal}`;
   }

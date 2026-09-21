@@ -28,7 +28,7 @@
     { name: "$99 Companion Fare (Sign-On)", desc: "$99 companion fare (plus ~$23 taxes) included with sign-on bonus. Savings vs. buying a regular ticket.", min: 0, max: 400, default: 100, firstYearOnly: true, comment: "Savings = typical fare minus ~$122. Avg Alaska one-way ~$250, so ~$130–$250 savings." },
 
     // Annual Companion Fare
-    { section: "Companion Fare (Annual)", name: "$99 Companion Fare (Annual)", desc: "$99 companion fare after $6,000 annual spend. Valid on Alaska/Hawaiian flights within North America.", min: 0, max: 400, default: 100, comment: "Requires $6,000 annual card spend. Savings = typical fare minus ~$122." },
+    { section: "Companion Fare (Annual)", name: "$99 Companion Fare (Annual)", desc: "$99 companion fare after $6,000 annual spend. Valid on Alaska/Hawaiian flights within North America.", min: 0, max: 400, default: 0, comment: "Requires $6,000 annual card spend. Savings = typical fare minus ~$122." },
 
     // Earning Potential
     { section: "Earning Potential (annual estimate)", name: "3X Points on Alaska/Hawaiian Purchases", desc: "3x points on Alaska Airlines and Hawaiian Airlines purchases. Estimate annual dollar value earned.", min: 0, max: 300, default: 0 },
