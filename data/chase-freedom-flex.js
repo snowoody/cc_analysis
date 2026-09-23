@@ -1,7 +1,7 @@
 // Chase Freedom Flex® Credit Card data
 (function() {
   const terms = {
-    "$200 Bonus Cash Back": `$200 Cash Back After You Spend $500 On Purchases In The First 3 Months From Account Opening: This product is not available to either (i) current cardmembers of this credit card, or (ii) previous cardmembers of this credit card who received a new cardmember bonus for this credit card within the last 24 months. You will receive 20,000 bonus points with this bonus offer, which can be redeemed for $200 cash back. To qualify and receive your bonus, you must make Purchases totaling $500 or more during the first 3 months from account opening. ("Purchases" do not include balance transfers, cash advances, travelers checks, foreign currency, money orders, wire transfers or similar cash-like transactions, lottery tickets, casino gaming chips, race track wagers or similar betting transactions, any checks that access your account, interest, unauthorized or fraudulent charges, and fees of any kind, including an annual fee, if applicable.) After qualifying, please allow 6 to 8 weeks for bonus points to post to your account. To be eligible for this bonus offer, account must be open and not in default at the time of fulfillment.`,
+    "$250 Bonus Cash Back": `$250 Cash Back After You Spend $500 On Purchases In The First 3 Months From Account Opening: This product is not available to either (i) current cardmembers of this credit card, or (ii) previous cardmembers of this credit card who received a new cardmember bonus for this credit card within the last 24 months. You will receive 25,000 bonus points with this bonus offer, which can be redeemed for $250 cash back. To qualify and receive your bonus, you must make Purchases totaling $500 or more during the first 3 months from account opening. ("Purchases" do not include balance transfers, cash advances, travelers checks, foreign currency, money orders, wire transfers or similar cash-like transactions, lottery tickets, casino gaming chips, race track wagers or similar betting transactions, any checks that access your account, interest, unauthorized or fraudulent charges, and fees of any kind, including an annual fee, if applicable.) After qualifying, please allow 6 to 8 weeks for bonus points to post to your account. To be eligible for this bonus offer, account must be open and not in default at the time of fulfillment.`,
 
     "0% Intro APR for 15 Months": `0% Introductory APR: 0% intro APR for 15 months from account opening on purchases and balance transfers. After the intro period, a variable APR of 18.24%–27.74%.`,
 
@@ -28,11 +28,15 @@
     "Trip Cancellation/Interruption Insurance": `Trip Cancellation and Interruption Insurance: You can be reimbursed up to $1,500 per covered traveler and $6,000 per trip for your pre-paid, non-refundable passenger fares, if your trip is canceled or cut short by sickness, severe weather or other covered situations.`,
 
     "Auto Rental Coverage": `Auto Rental Coverage: Decline the rental company's collision insurance and charge the entire rental cost to your card. Coverage provides reimbursement for theft and collision damage for most rental vehicles. In the U.S., coverage is secondary to your personal insurance.`,
+
+    "No Foreign Transaction Fees": `No Foreign Transaction Fees: There is no fee for purchases made outside the United States or in a foreign currency.`,
+
+    "Points Boost on Chase Travel Hotels": `Points Boost offers give you the opportunity to enhance the value of your points when booking through Chase Travel — up to 10% more for Freedom cards depending on the offer. Points earned with your card are worth $0.01 each when redeemed through Chase Travel, as outlined in your Ultimate Rewards Agreement. That means 100 points are worth $1, but with a Points Boost promotion 100 points could be worth up to $1.10 for Freedom cards. Points Boost offers are promotional and are refreshed periodically. Offers may change with the refresh. Travel inventory is subject to availability.`,
   };
 
   const benefits = [
     // Sign-on Bonus (first year only)
-    { section: "Sign-On Bonus (First Year Only)", name: "$200 Bonus Cash Back", desc: "20,000 Ultimate Rewards points after spending $500 in the first 3 months. Adjust your value per point.", min: 0, max: 3.0, default: 1.0, miles: 20000, firstYearOnly: true },
+    { section: "Sign-On Bonus (First Year Only)", name: "$250 Bonus Cash Back", desc: "25,000 Ultimate Rewards points after spending $500 in the first 3 months. Adjust your value per point.", min: 0, max: 3.0, default: 1.0, miles: 25000, firstYearOnly: true },
     { name: "0% Intro APR for 15 Months", desc: "0% APR on purchases and balance transfers for first 15 months. Estimate interest savings.", min: 0, max: 1500, default: 0, firstYearOnly: true },
 
     // Earning Potential
@@ -48,7 +52,9 @@
     { name: "$10 Off Quarterly DoorDash", desc: "$10 off per quarter on non-restaurant DoorDash orders through 12/31/2027", min: 0, max: 40, default: 0 },
 
     // Travel & Purchase Protection
-    { section: "Travel & Purchase Protection", name: "Trip Cancellation/Interruption Insurance", desc: "Up to $1,500/person, $6,000/trip for non-refundable fares if trip is canceled or cut short", min: 0, max: 200, default: 0 },
+    { section: "Travel & Purchase Protection", name: "No Foreign Transaction Fees", desc: "No fees on purchases made outside the U.S. or in a foreign currency", min: 0, max: 200, default: 0 },
+    { name: "Points Boost on Chase Travel Hotels", desc: "Up to 10% more value when redeeming UR points on select hotel bookings through Chase Travel", min: 0, max: 100, default: 0 },
+    { name: "Trip Cancellation/Interruption Insurance", desc: "Up to $1,500/person, $6,000/trip for non-refundable fares if trip is canceled or cut short", min: 0, max: 200, default: 0 },
     { name: "Auto Rental Coverage", desc: "Secondary collision/theft coverage when you decline the rental company's insurance", min: 0, max: 100, default: 0 },
     { name: "Purchase Protection", desc: "120-day coverage against damage or theft, up to $500 per item", min: 0, max: 100, default: 0 },
     { name: "Extended Warranty Protection", desc: "Extends manufacturer warranty by 1 year (on warranties ≤3 years)", min: 0, max: 100, default: 0 },
@@ -63,7 +69,7 @@
     type: 'Personal',
     categories: ['Cash Back', 'No Annual Fee'],
     annualFee: 0,
-    signOnBonusLabel: '20,000 UR pts + 15mo 0% APR',
+    signOnBonusLabel: '25,000 UR pts + 15mo 0% APR',
     benefits: benefits,
     terms: terms,
   };
