@@ -132,9 +132,9 @@ For New York State residents: additionally limited to $2,000 per bag and $10,000
 
     // Annual IHG Benefits
     { section: "Annual IHG Benefits", name: "Anniversary Free Night (50K cap)", desc: "Free night certificate each year (50K point cap, can top up with points for higher-value hotels)", min: 0, max: 400, default: 150, comment: "50K points covers most Holiday Inn and many Crowne Plaza properties. Lower cap than the Premier Select's 60K." },
-    { name: "Up to $100 in Annual Food & Beverage Rewards", desc: "$25/quarter in F&B vouchers at IHG hotels (use-it-or-lose-it each quarter)", min: 0, max: 100, default: 25, comment: "Each $25 voucher expires at end of quarter and must be used in a single transaction. Value depends on IHG stay frequency." },
+    { name: "Up to $100 in Annual Food & Beverage Rewards", desc: "$25/quarter in F&B vouchers at IHG hotels (use-it-or-lose-it each quarter)", min: 0, max: 100, default: 15, comment: "Each $25 voucher expires at end of quarter and must be used in a single transaction. Value depends on IHG stay frequency." },
     { name: "$100 Airline Statement Credit", desc: "$100 credit/year when spending $250+ on flights booked directly with an airline (through 12/31/27)", min: 0, max: 100, default: 50 },
-    { name: "4th Night Free on Reward Stays", desc: "Every 4th consecutive reward night is free at the same property. Unlimited uses.", min: 0, max: 400, default: 0 },
+    { name: "4th Night Free on Reward Stays", desc: "Every 4th consecutive reward night is free at the same property. Unlimited uses.", min: 0, max: 400, default: 50 },
     { name: "Automatic Gold Elite Status", desc: "Free Gold Elite: 40% point bonus, room upgrades, late checkout", min: 0, max: 150, default: 0 },
     { name: "30% Off IHG Points Purchases", desc: "Save 30% when purchasing IHG points with this card", min: 0, max: 100, default: 0 },
 

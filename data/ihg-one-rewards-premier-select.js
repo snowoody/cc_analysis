@@ -127,7 +127,7 @@ For New York State residents, the coverage period is 90 days. Restrictions, limi
 
     // Annual IHG Benefits
     { section: "Annual IHG Benefits", name: "Anniversary Free Night (60K cap)", desc: "Free night certificate each year (60K point cap, can top up with points for higher-value hotels)", min: 0, max: 500, default: 200, comment: "60K points covers most Holiday Inn, Crowne Plaza, and some InterContinental properties. Can top up from your points balance for pricier hotels." },
-    { name: "Up to $300 in Annual Food & Beverage Rewards", desc: "$75/quarter in F&B vouchers at IHG hotels (use-it-or-lose-it each quarter)", min: 0, max: 300, default: 75, comment: "Each $75 voucher expires at end of quarter and must be used in a single transaction. Value depends on how often you stay at IHG properties." },
+    { name: "Up to $300 in Annual Food & Beverage Rewards", desc: "$75/quarter in F&B vouchers at IHG hotels (use-it-or-lose-it each quarter)", min: 0, max: 300, default: 30, comment: "Each $75 voucher expires at end of quarter and must be used in a single transaction. Value depends on how often you stay at IHG properties." },
     { name: "$200 Airline Statement Credit", desc: "$200 credit/year when spending $250+ on flights booked directly with an airline (through 12/31/27)", min: 0, max: 200, default: 100 },
     { name: "4th Night Free on Reward Stays", desc: "Every 4th consecutive reward night is free at the same property. Unlimited uses.", min: 0, max: 400, default: 50 },
     { name: "Automatic Platinum Elite Status", desc: "Free Platinum Elite: 60% point bonus, room upgrades, late checkout", min: 0, max: 200, default: 0 },

@@ -1,11 +1,11 @@
 // Chase Sapphire Preferred® data (June 2026 refresh)
 (function() {
   const terms = {
-    "100,000 Point Sign-On Bonus": `Earn 100,000 bonus points after you spend $5,000 on purchases in the first 3 months from account opening.
+    "75,000 Point Sign-On Bonus": `Earn 75,000 bonus points after you spend $5,000 on purchases in the first 3 months from account opening.
 
-New Cardmember Bonus - 100,000 Points: To qualify, you must make $5,000 in purchases during the first 3 months from account opening. After qualifying, please allow 6 to 8 weeks for bonus to post to your account. This card is unavailable to you if you currently have one open. The new cardmember bonus may not be available if you previously held this card or received a new cardmember bonus for this card; Chase may also consider the number of cards you have opened and closed.
+New Cardmember Bonus - 75,000 Points: To qualify, you must make $5,000 in purchases during the first 3 months from account opening. After qualifying, please allow 6 to 8 weeks for bonus to post to your account. This card is unavailable to you if you currently have one open. The new cardmember bonus may not be available if you previously held this card or received a new cardmember bonus for this card; Chase may also consider the number of cards you have opened and closed.
 
-Chase values 100,000 points at roughly $1,250 for travel through Chase Travel (points are worth $0.01 each baseline, or more with Points Boost). The Points Guy values Ultimate Rewards points at ~2¢ each via transfer partners. Adjust the slider to your own per-point value.`,
+Chase values 75,000 points at roughly $937.50 for travel through Chase Travel (points are worth $0.01 each baseline, or more with Points Boost). The Points Guy values Ultimate Rewards points at ~2¢ each via transfer partners. Adjust the slider to your own per-point value.`,
 
     "$100 Chase Travel Hotel Credit": `Earn up to $100 in statement credits each account anniversary year for hotel stays purchased through Chase Travel.
 
@@ -110,7 +110,7 @@ For New York residents, the coverage period is 90 days.`,
 
   const benefits = [
     // Sign-On Bonus (first year only)
-    { section: "Sign-On Bonus (First Year Only)", name: "100,000 Point Sign-On Bonus", desc: "100,000 points after spending $5,000 on purchases in the first 3 months. Adjust your value per point.", min: 0, max: 2.5, default: 1.5, miles: 100000, firstYearOnly: true },
+    { section: "Sign-On Bonus (First Year Only)", name: "75,000 Point Sign-On Bonus", desc: "75,000 points after spending $5,000 on purchases in the first 3 months. Adjust your value per point.", min: 0, max: 2.5, default: 1.5, miles: 75000, firstYearOnly: true },
 
     // Annual Credits
     { section: "Annual Credits", name: "$100 Chase Travel Hotel Credit", desc: "$100 in statement credits each anniversary year for hotel stays booked through Chase Travel. Doubled from $50 in June 2026.", min: 0, max: 100, default: 75, comment: "Requires booking hotels through Chase Travel. Applies automatically — no activation needed. Hotel purchases qualifying for the credit do not earn points." },
@@ -162,7 +162,7 @@ For New York residents, the coverage period is 90 days.`,
     type: 'Personal',
     categories: ['Travel', 'Points', 'Dining'],
     annualFee: 95,
-    signOnBonusLabel: '100,000 points',
+    signOnBonusLabel: '75,000 points',
     benefits: benefits,
     terms: terms,
   };
