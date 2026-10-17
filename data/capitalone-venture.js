@@ -7,6 +7,12 @@ Eligible Venture primary account holders earn this bonus. This one-time bonus is
 
 Capital One miles can be redeemed for travel statement credits, Capital One Travel bookings, transfers to 15+ airline/hotel partners, gift cards, cash back, or Amazon/PayPal purchases. Transfer-partner redemptions and Pay With Miles for travel typically yield the best value.`,
 
+    "$300 Capital One Travel Stays Credit (first year)": `Welcome Offer Travel Credit: Eligible Venture primary account holders receive a one-time $300 Capital One Travel Stays credit ("Credit") to use toward hotel and vacation rental purchases made through Capital One Travel.
+
+Credits will expire one year after account opening. The Credit will be available within Capital One Travel and can be applied to purchases at checkout. The Credit may be used in whole for a single purchase or in part over multiple purchases. Rewards will not be earned on the Credit.
+
+If a purchase using the Credit is canceled, the Credit will be restored if it is not expired; an expired Credit will not be restored upon cancellation. A Venture card account must be open and in good standing to receive or use the Credit.`,
+
     "$50 Lifestyle Collection Credit (per stay)": `Lifestyle Collection Experience Credit:
 
 Hotels: $50 USD experience credit applied at checkout by hotel to qualifying charges. Qualifying charges vary by location and must be charged to your room during your eligible stay; contact the hotel directly to confirm qualifying experiences. Advance reservations recommended.
@@ -88,6 +94,7 @@ Benefits vary by product. See your Guide to Benefits for details, as terms and e
   const benefits = [
     // Sign-On Bonus (first year only)
     { section: "Sign-On Bonus (First Year Only)", name: "75,000 Bonus Miles", desc: "After spending $4,000 on purchases within first 3 months. Adjust your value per mile.", min: 0, max: 3.0, default: 1.5, miles: 75000, firstYearOnly: true, comment: "Capital One miles typically valued at 1.4-1.7¢/mile via transfer partners (e.g., Aeroplan, Flying Blue). Statement credit redemption is fixed at 1¢/mile. Not eligible if you've received Venture or Venture X bonus in past 48 months." },
+    { name: "$300 Capital One Travel Stays Credit (first year)", desc: "One-time $300 credit toward hotel/vacation rental bookings via Capital One Travel. Expires one year after account opening.", min: 0, max: 300, default: 240, firstYearOnly: true },
 
     // Annual Travel Credits
     { section: "Annual Travel Credits", name: "$50 Lifestyle Collection Credit (per stay)", desc: "$50 experience credit on every Lifestyle Collection hotel/vacation rental booking via Capital One Travel", min: 0, max: 300, default: 0, comment: "Per stay, no annual cap. Estimate based on number of qualifying Lifestyle Collection stays/year. Booking must be made through Capital One Travel." },
