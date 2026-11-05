@@ -3,6 +3,8 @@
   const terms = {
     "Sign-On Bonus": `Earn 60,000 bonus points when you spend $4,000 in purchases in the first 3 months from account opening – that's $600 toward your next trip. Points are redeemable for travel, gift cards, statement credits, and transfers to select travel loyalty partners. Bonus points are typically posted 1-2 billing cycles after the qualifying spend requirement is met. Offers may differ from time to time and depend on the marketing channel.`,
 
+    "Premier Sign-On Bonus": `Wells Fargo Premier clients only: earn 100,000 bonus points when you spend $4,000 in purchases in the first 90 days from account opening – that's $1,000 toward your next trip. This offer is available to Wells Fargo Premier customers and replaces the standard 60,000-point public offer; only one sign-on bonus can be earned. Offers may differ from time to time and depend on the marketing channel.`,
+
     "5X Points on Hotels": `Earn 5X points on hotels when booked directly with the hotel or through a travel provider. Spend is categorized by merchant category code; stays booked through third-party travel sites that do not code as hotels may not qualify.`,
 
     "4X Points on Airlines": `Earn 4X points on airfare purchased directly from the airline. Purchases must be classified as airline merchants to qualify; travel agencies and online travel bookings may code as general travel (3X) rather than airlines.`,
@@ -32,20 +34,21 @@
 
   const benefits = [
     // Sign-On Bonus
-    { section: "Sign-On Bonus", name: "Sign-On Bonus", desc: "60,000 bonus points after $4,000 spend in 3 months (~$600 value at 1cpp)", min: 0, max: 900, default: 600, firstYearOnly: true },
+    { section: "Sign-On Bonus", name: "Sign-On Bonus", desc: "60,000 bonus points after $4,000 spend in 3 months (~$840 value at 1.4cpp)", min: 0, max: 1200, default: 0, firstYearOnly: true },
+    { name: "Premier Sign-On Bonus", desc: "Premier clients only: 100,000 bonus points after $4,000 spend in 90 days (~$1,400 value at 1.4cpp)", min: 0, max: 2000, default: 1400, firstYearOnly: true, comment: "Replaces the standard 60K offer — only one sign-on bonus can be earned, so keep the other slider at $0." },
 
     // Earning Potential
-    { section: "Earning Potential (annual estimate)", name: "5X Points on Hotels", desc: "5X points on hotels booked directly. Estimate annual dollar value earned.", min: 0, max: 1000, default: 0 },
+    { section: "Earning Potential (annual estimate)", name: "5X Points on Hotels", desc: "5X points on hotels booked directly. Estimate annual dollar value earned.", min: 0, max: 1000, default: 20 },
     { name: "4X Points on Airlines", desc: "4X points on airfare booked directly with airlines. Estimate annual dollar value earned.", min: 0, max: 1000, default: 0 },
-    { name: "3X Points on Other Travel & Dining", desc: "3X points on restaurants and other travel. Estimate annual dollar value earned.", min: 0, max: 1000, default: 0 },
+    { name: "3X Points on Other Travel & Dining", desc: "3X points on restaurants and other travel. Estimate annual dollar value earned.", min: 0, max: 1000, default: 10 },
     { name: "1X Points on Other Purchases", desc: "1X points on all other eligible purchases. Estimate annual dollar value earned.", min: 0, max: 300, default: 0 },
 
     // Statement Credits
-    { section: "Statement Credits", name: "$50 Annual Airline Statement Credit", desc: "$50 annual statement credit after a minimum $50 airline purchase", min: 0, max: 50, default: 50 },
+    { section: "Statement Credits", name: "$50 Annual Airline Statement Credit", desc: "$50 annual statement credit after a minimum $50 airline purchase", min: 0, max: 50, default: 40 },
 
     // Travel Benefits
     { section: "Travel Benefits", name: "No Foreign Transaction Fees", desc: "No fees on international purchases", min: 0, max: 100, default: 0 },
-    { name: "Rewards Points Transfer", desc: "Transfer points to select airline and hotel partners for outsized value", min: 0, max: 300, default: 0, comment: "Transfer partners can push point value well above 1cpp, but value depends on redemption." },
+    { name: "Rewards Points Transfer", desc: "Transfer points to select airline and hotel partners for outsized value", min: 0, max: 300, default: 0, comment: "Bonus values already assume 1.4cpp; only add value here for redemptions that beat that." },
     { name: "Visa Signature Concierge", desc: "Complimentary 24/7 concierge for tickets, travel, and reservations", min: 0, max: 100, default: 0 },
     { name: "Visa Signature Luxury Hotel Collection", desc: "Room upgrades, late checkout, and property credits at participating hotels", min: 0, max: 200, default: 0 },
 
@@ -65,7 +68,7 @@
     type: 'Personal',
     categories: ['Travel', 'Dining', 'Hotels', 'Airlines'],
     annualFee: 95,
-    signOnBonusLabel: '60,000 pts',
+    signOnBonusLabel: '60,000 pts (100K Premier)',
     benefits: benefits,
     terms: terms,
   };
